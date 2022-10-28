@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56a34ddc_951e1647",
+        "filename": "jenkins/android-build.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-10-28T08:18:54Z",
+      "side": 1,
+      "message": "Tis is used in lines 6 and 8 so it has to be moved up",
+      "revId": "3494a105ccc39bddf2571eb0933531fcd61aedc7",
+      "serverId": "b49086b3-c06c-47ea-b69e-65c8379e1be6"
+    }
+  ]
+}
