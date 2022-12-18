@@ -10,6 +10,7 @@ pipeline {
         choice(name: 'JENKINS_BUILDTYPE', choices: ['user', 'userdebug', 'eng'], description: '')
         choice(name: 'JENKINS_RELEASETYPE', choices: ['alpha', 'beta', 'stable'], description: '')
         booleanParam(name: 'JENKINS_CLEAN', defaultValue: true, description: '')
+        booleanParam(name: 'JENKINS_REPOSYNC', defaultValue: true, description: '')
         booleanParam(name: 'JENKINS_TELEGRAM', defaultValue: true, description: '')
     }
     environment {
@@ -22,6 +23,11 @@ pipeline {
     stages {
         stage('Sync') {
             steps {
+                when {
+                    not {
+                        environment(name: "JENKINS_REPOSYNC", value: "false")
+                    }
+                }
                 script {
                     currentBuild.displayName = "${currentBuild.displayName} (${params.JENKINS_DEVICE})"
                     env.STAGE = "sync"
