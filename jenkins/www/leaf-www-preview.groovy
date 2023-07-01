@@ -28,9 +28,10 @@ pipeline {
                         set -e
 			mkdir -p build
 
+                        export MASTER_IP="$(echo $SSH_CLIENT | cut -f1 -d ' ')"
                         export MYSQL_PWD="leaf"
                         echo "CREATE DATABASE leaf_ota; GRANT ALL ON leaf_ota.* TO 'leaf'@'localhost' IDENTIFIED BY 'leaf'; USE leaf_ota;" > build/leaf_ota.sql
-                        mariadb-dump -h 10.2.0.1 -u leaf leaf_ota >> build/leaf_ota.sql
+                        mariadb-dump -h $MASTER_IP -u leaf leaf_ota >> build/leaf_ota.sql
 
                         docker build -t leafos/leaf_www --build-arg baseurl=${GERRIT_CHANGE_NUMBER} .
                         docker run --rm -tv $(pwd)/build:/src/build leafos/leaf_www
