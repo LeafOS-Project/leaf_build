@@ -50,7 +50,7 @@ function telegram() {
 function init() {
 	telegram sendMessage "$TELEGRAM_MESSAGE"
 	OTA_INDEX=$(ssh jenkins@$MASTER_IP mktemp)
-	scp ./leaf/build/jenkins/index-ota.sh jenkins@$MASTER_IP:"$OTA_INDEX"
+	scp ./jenkins/build/jenkins/index-ota.sh jenkins@$MASTER_IP:"$OTA_INDEX"
 	ssh jenkins@$MASTER_IP chmod +x "$OTA_INDEX"
 	echo "$OTA_INDEX" > .ota_index_tmp
 }
