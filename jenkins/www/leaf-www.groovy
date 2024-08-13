@@ -20,6 +20,7 @@ pipeline {
                         ssh jenkins@$MASTER_IP git -C /var/www/leafos.org/ reset --hard
                         ssh jenkins@$MASTER_IP git -C /var/www/leafos.org/ pull ${GERRIT_URL} ${GERRIT_REFSPEC}
                         ssh jenkins@$MASTER_IP "cd /var/www/leafos.org; composer install"
+                        ssh jenkins@$MASTER_IP chmod -R a+rwx /var/www/leafos.org/var/cache/
                 '''
             }
         }
