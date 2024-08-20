@@ -275,6 +275,8 @@ function cleanup() {
 
 	if [ "$JENKINS_CLEAN" = true ]; then
 		rm -rf out
+	else
+		rm -rf out/target/product/*
 	fi
 	rm -f .msgid
 	rm -f leaf*.zip
