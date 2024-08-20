@@ -9,6 +9,7 @@ pipeline {
         choice(name: 'JENKINS_BUILDTYPE', choices: ['user', 'userdebug', 'eng'], description: '')
         choice(name: 'JENKINS_RELEASETYPE', choices: ['alpha', 'beta', 'stable'], description: '')
         booleanParam(name: 'JENKINS_TELEGRAM', defaultValue: true, description: '')
+        string(name: 'JENKINS_START_AT_DEVICE', defaultValue: '', description: '')
     }
     options {
         disableConcurrentBuilds()
@@ -25,11 +26,20 @@ pipeline {
         stage('Trigger builds') {
             steps {
                 script {
+                    startBuild = "${JENKINS_START_AT_DEVICE}" == "";
+
                     devices = readYaml(file: 'leaf_devices/devices.yaml')
                     for (family in devices) {
                         i = 0
                         shouldSync = true
                         for (device in family.device) {
+                            if (device == "${JENKINS_START_AT_DEVICE}") {
+                                startBuild = true
+                                shouldSync = true
+                            }
+                            if (!startBuild)
+                                continue;
+
                             shouldClean = i >= (family.device.size() - 1)
                             build job:"${JENKINS_BUILD_JOB}", parameters:[
                                 string(name: 'JENKINS_LEAF_VERSION', value: "${JENKINS_LEAF_VERSION}"),
