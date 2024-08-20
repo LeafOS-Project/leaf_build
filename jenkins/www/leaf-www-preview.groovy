@@ -33,8 +33,10 @@ pipeline {
                         echo "CREATE DATABASE leaf_ota; GRANT ALL ON leaf_ota.* TO 'leaf'@'localhost' IDENTIFIED BY 'leaf'; USE leaf_ota;" > build/leaf_ota.sql
                         mariadb-dump -h $MASTER_IP -u leaf leaf_ota >> build/leaf_ota.sql
 
-                        docker build -t leafos/leaf_www --build-arg baseurl=${GERRIT_CHANGE_NUMBER} .
-                        docker run --rm -tv $(pwd)/build:/src/build leafos/leaf_www
+                        if [ ! -z "$(git show FETCH_HEAD -- Dockerfile)" ]; then
+                            docker build -t leafos/leaf_www --build-arg baseurl=${GERRIT_CHANGE_NUMBER} .
+                        fi
+                        docker run --rm -t -v $(pwd):/src leafos/leaf_www
                         if [ $? == 0 ]; then
                                 ssh -p 29418 LeafOS-Jenkins@review.leafos.org gerrit review -n OWNER --tag Jenkins --label Verified=+1 -m \\'"PASS: Jenkins : ${BUILD_URL}console\nBuild successful for change $GERRIT_CHANGE_NUMBER, patchset $GERRIT_PATCHSET_NUMBER.\nPreview available at https://www-preview.leafos.org/${GERRIT_CHANGE_NUMBER}"\\' $GERRIT_CHANGE_NUMBER,$GERRIT_PATCHSET_NUMBER
                         else
